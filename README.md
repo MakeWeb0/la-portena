@@ -1,6 +1,6 @@
 # La Porteña · Cocina argentina en Alicante
 
-Web one-page de La Porteña (café-bar en Avinguda de l'Estació 12 y restaurante en Av. Juan Sanchis Candela 28, Alicante).
+Web one-page de La Porteña, café-bar argentino en Avinguda de l'Estació 12, Alicante.
 Asfalto, ladrillo, cuero y neón: la estética motera del local como sistema de diseño.
 
 - Menú hamburguesa tipo persiana de taller (GSAP)
