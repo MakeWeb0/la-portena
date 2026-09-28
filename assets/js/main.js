@@ -6,14 +6,8 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  // sin ratón (móvil, tablet) las fotos de la carta se abren tocando la fila;
-  // con ratón se muestran al pasar por encima, sea cual sea el ancho de la ventana
-  const hasMouse = matchMedia('(any-hover: hover) and (any-pointer: fine)').matches;
-  const touchCarta = !hasMouse;
-  document.documentElement.classList.toggle('is-touch', touchCarta);
 
   $('#year').textContent = new Date().getFullYear();
-  if (touchCarta) $('.carta__hint').textContent = 'Tocá los platos con cámara para ver la foto.';
 
   if (!window.gsap) return; // sin GSAP la web sigue siendo navegable
   gsap.registerPlugin(ScrollTrigger);
@@ -273,37 +267,33 @@
   function initCarta() {
     const tabs = $$('.carta__tabs [role=tab]');
     const panels = $$('.carta__panel');
-    const preview = $('.carta__preview');
-    const pImg = $('img', preview);
 
-    // en táctil, la foto se abre dentro de la fila
-    if (touchCarta) {
-      $$('.dish.has-img').forEach(d => {
-        const name = $('.dish__n', d).firstChild.textContent.trim();
-        const cam = document.createElement('button');
-        cam.type = 'button'; cam.className = 'dish__cam';
-        cam.setAttribute('aria-expanded', 'false');
-        cam.setAttribute('aria-label', 'Ver foto: ' + name);
-        $('.dish__n', d).after(cam);
-        const photo = document.createElement('img');
-        photo.className = 'dish__photo'; photo.alt = name; // src al tocar
-        d.append(photo);
-        d.addEventListener('click', () => {
-          const open = !d.classList.contains('is-open');
-          $$('.dish.is-open').forEach(o => o.classList.remove('is-open'));
-          $$('.dish__cam').forEach(c => c.setAttribute('aria-expanded', 'false'));
-          if (!open) return ScrollTrigger.refresh();
-          if (!photo.src) photo.src = d.dataset.img;
-          cam.setAttribute('aria-expanded', 'true');
-          // se abre cuando la foto ya está cargada, para que el fundido se vea entero
-          photo.decode().catch(() => {}).then(() => {
-            if (cam.getAttribute('aria-expanded') !== 'true') return;
-            d.classList.add('is-open');
-            ScrollTrigger.refresh();
-          });
+    // la foto del plato se abre dentro de la fila al hacer clic o tocar
+    $$('.dish.has-img').forEach(d => {
+      const name = $('.dish__n', d).firstChild.textContent.trim();
+      const cam = document.createElement('button');
+      cam.type = 'button'; cam.className = 'dish__cam';
+      cam.setAttribute('aria-expanded', 'false');
+      cam.setAttribute('aria-label', 'Ver foto: ' + name);
+      $('.dish__n', d).after(cam);
+      const photo = document.createElement('img');
+      photo.className = 'dish__photo'; photo.alt = name; // src al tocar
+      d.append(photo);
+      d.addEventListener('click', () => {
+        const open = !d.classList.contains('is-open');
+        $$('.dish.is-open').forEach(o => o.classList.remove('is-open'));
+        $$('.dish__cam').forEach(c => c.setAttribute('aria-expanded', 'false'));
+        if (!open) return ScrollTrigger.refresh();
+        if (!photo.src) photo.src = d.dataset.img;
+        cam.setAttribute('aria-expanded', 'true');
+        // se abre cuando la foto ya está cargada, para que el fundido se vea entero
+        photo.decode().catch(() => {}).then(() => {
+          if (cam.getAttribute('aria-expanded') !== 'true') return;
+          d.classList.add('is-open');
+          ScrollTrigger.refresh();
         });
       });
-    }
+    });
 
     function select(tab, focus) {
       const panel = $('#' + tab.getAttribute('aria-controls'));
@@ -330,32 +320,6 @@
       tab.addEventListener('keydown', e => {
         const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (dir) { e.preventDefault(); select(tabs[(i + dir + tabs.length) % tabs.length], true); }
-      });
-    });
-
-    // foto que sigue al ratón sobre los platos que la tienen
-    if (touchCarta) return;
-    const xTo = gsap.quickTo(preview, 'x', { duration: .5, ease: 'power3.out' });
-    const yTo = gsap.quickTo(preview, 'y', { duration: .5, ease: 'power3.out' });
-    const rTo = gsap.quickTo(preview, 'rotate', { duration: .6, ease: 'power3.out' });
-    let lastX = 0;
-    const px = x => gsap.utils.clamp(150, innerWidth - 150, x); // que la foto no se salga por los lados
-    gsap.set(preview, { xPercent: -50, yPercent: -110 });
-    $$('.dish.has-img').forEach(d => {
-      d.addEventListener('pointerenter', e => {
-        if (e.pointerType !== 'mouse') return;
-        if (pImg.getAttribute('src') !== d.dataset.img) pImg.src = d.dataset.img;
-        gsap.set(preview, { x: px(e.clientX), y: e.clientY });
-        gsap.to(preview, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.7)', overwrite: 'auto' });
-      });
-      d.addEventListener('pointermove', e => {
-        if (e.pointerType !== 'mouse') return;
-        xTo(px(e.clientX)); yTo(e.clientY);
-        rTo(gsap.utils.clamp(-12, 12, (e.clientX - lastX) * .8));
-        lastX = e.clientX;
-      });
-      d.addEventListener('pointerleave', () => {
-        gsap.to(preview, { autoAlpha: 0, scale: .6, duration: .3, ease: 'power2.in', overwrite: 'auto' });
       });
     });
   }

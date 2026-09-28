@@ -4,7 +4,7 @@ Web one-page de La Porteña Café-Bar, cafetería argentina en Avinguda de l'Est
 desayunos, medialunas, empanadas, alfajores y productos argentinos.
 
 - Hero con el vídeo del local
-- Carta por categorías: foto al pasar el ratón (escritorio) o al tocar el plato (móvil)
+- Carta por categorías: la foto del plato se abre al hacer clic o tocar
 - Carrusel 3D de la vitrina, reseñas, Instagram y preguntas frecuentes
 - SEO local: datos estructurados `CafeOrCoffeeShop`, horario, dirección y teléfono
 - Animaciones con GSAP + ScrollTrigger

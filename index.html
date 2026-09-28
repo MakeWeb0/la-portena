@@ -211,7 +211,7 @@
 <section class="carta" id="carta">
   <div class="carta__head">
     <h2 class="carta__title">La carta</h2>
-    <p class="carta__hint">Pasá el ratón por los platos con <span class="cam" aria-hidden="true"></span> y te los mostramos.</p>
+    <p class="carta__hint">Tocá los platos con <span class="cam" aria-hidden="true"></span> y te mostramos la foto.</p>
   </div>
 
   <div class="carta__tabs" role="tablist" aria-label="Categorías de la carta">
@@ -226,7 +226,7 @@
     <!-- Desayunos -->
     <div class="carta__panel is-active" role="tabpanel" id="c-desayunos" aria-labelledby="t-desayunos">
       <p class="carta__note">Ofertas de desayuno, todos los días hasta las 13:00</p>
-      <ul class="dishes">
+      <ul class="dishes" style="--rows: 6">
         <li class="dish has-img" data-img="assets/img/medialunas.webp"><span class="dish__n">Café con leche + croissant</span><i></i><span class="dish__p">3,00 €</span></li>
         <li class="dish has-img" data-img="assets/img/tostada-tomate.webp"><span class="dish__n">Café con leche + tostada con tomate</span><i></i><span class="dish__p">3,30 €</span></li>
         <li class="dish"><span class="dish__n">Café con leche + tarta de manzana</span><i></i><span class="dish__p">5,50 €</span></li>
@@ -245,7 +245,7 @@
     <!-- Empanadas -->
     <div class="carta__panel" role="tabpanel" id="c-empanadas" aria-labelledby="t-empanadas" hidden>
       <p class="carta__note">Empanadas horneadas cada día</p>
-      <ul class="dishes">
+      <ul class="dishes" style="--rows: 6">
         <li class="dish has-img" data-img="assets/img/empanadas.webp"><span class="dish__n">Carne argentina</span><i></i><span class="dish__p">3,30 €</span></li>
         <li class="dish"><span class="dish__n">Pollo argentino</span><i></i><span class="dish__p">3,30 €</span></li>
         <li class="dish"><span class="dish__n">Jamón y queso</span><i></i><span class="dish__p">3,30 €</span></li>
@@ -264,7 +264,7 @@
     <!-- Productos argentinos -->
     <div class="carta__panel" role="tabpanel" id="c-almacen" aria-labelledby="t-almacen" hidden>
       <p class="carta__note">Para llevar: un pedacito de Argentina a tu casa</p>
-      <ul class="dishes">
+      <ul class="dishes" style="--rows: 5">
         <li class="dish"><span class="dish__n">Alfajor Havanna<small>Unidad · caja de 12</small></span><i></i><span class="dish__p">2,80 € · 28,00 €</span></li>
         <li class="dish"><span class="dish__n">Havannet<small>Unidad · caja de 12</small></span><i></i><span class="dish__p">2,80 € · 28,00 €</span></li>
         <li class="dish"><span class="dish__n">Alfajor Punta Ballena triple</span><i></i><span class="dish__p">3,00 €</span></li>
@@ -281,7 +281,7 @@
     <!-- Dulces -->
     <div class="carta__panel" role="tabpanel" id="c-dulces" aria-labelledby="t-dulces" hidden>
       <p class="carta__note">Medialunas por docena, por encargo</p>
-      <ul class="dishes">
+      <ul class="dishes" style="--rows: 5">
         <li class="dish has-img" data-img="assets/img/medialunas.webp"><span class="dish__n">Medialuna de manteca</span><i></i><span class="dish__p">1,30 €</span></li>
         <li class="dish has-img" data-img="assets/img/medialuna-rellena.webp"><span class="dish__n">Medialuna rellena<small>Dulce de leche o crema pastelera</small></span><i></i><span class="dish__p">1,50 €</span></li>
         <li class="dish"><span class="dish__n">Docena de medialunas</span><i></i><span class="dish__p">14,00 €</span></li>
@@ -298,7 +298,7 @@
     <!-- Cervezas -->
     <div class="carta__panel" role="tabpanel" id="c-birras" aria-labelledby="t-birras" hidden>
       <p class="carta__note">Promo jirafa: 3 litros de cerveza + 3 tapas por 25 €</p>
-      <ul class="dishes">
+      <ul class="dishes" style="--rows: 4">
         <li class="dish has-img" data-img="assets/img/grifo.webp"><span class="dish__n">Caña</span><i></i><span class="dish__p">2,20 €</span></li>
         <li class="dish"><span class="dish__n">Caña doble</span><i></i><span class="dish__p">2,50 €</span></li>
         <li class="dish"><span class="dish__n">Tanque<small>En jarra de cristal, bien fría</small></span><i></i><span class="dish__p">3,50 €</span></li>
@@ -313,7 +313,6 @@
 
   <a class="carta__pdf" href="https://drive.google.com/file/d/1RQuC4X8QimUXbqtSWc2SLTCnXbQ48QOr/view" target="_blank" rel="noopener">Ver la carta completa del café-bar (PDF)</a>
 
-  <figure class="carta__preview" aria-hidden="true"><img src="" alt=""></figure>
 </section>
 
 <!-- ══ CARRUSEL 3D ══ -->
