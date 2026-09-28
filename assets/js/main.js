@@ -6,9 +6,14 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // sin ratón (móvil, tablet) las fotos de la carta se abren tocando la fila;
+  // con ratón se muestran al pasar por encima, sea cual sea el ancho de la ventana
+  const hasMouse = matchMedia('(any-hover: hover) and (any-pointer: fine)').matches;
+  const touchCarta = !hasMouse;
+  document.documentElement.classList.toggle('is-touch', touchCarta);
 
   $('#year').textContent = new Date().getFullYear();
-  if (!canHover) $('.carta__hint').textContent = 'Algunos platos vienen con foto, para que sepas lo que pedís.';
+  if (touchCarta) $('.carta__hint').textContent = 'Tocá los platos con cámara para ver la foto.';
 
   if (!window.gsap) return; // sin GSAP la web sigue siendo navegable
   gsap.registerPlugin(ScrollTrigger);
@@ -49,7 +54,20 @@
     .fromTo('.menu__peek', { clipPath: 'inset(100% 0 0 0)', rotate: 8 }, { clipPath: 'inset(0% 0 0 0)', rotate: 3, duration: .9, ease: 'expo.out' }, '<.1')
     .fromTo(['.menu__close', '.menu__meta'], { autoAlpha: 0, y: -14 }, { autoAlpha: 1, y: 0, duration: .5, stagger: .08, ease: 'power2.out' }, '<');
 
+  // con el menú abierto la página de atrás no se desliza
+  const root = document.documentElement;
+  function lockScroll() {
+    root.style.setProperty('--sb', innerWidth - root.clientWidth + 'px'); // ancho de la barra de scroll
+    root.classList.add('no-scroll');
+  }
+  function unlockScroll() {
+    root.classList.remove('no-scroll');
+  }
+  menu.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+  menu.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+
   function openMenu() {
+    lockScroll();
     menu.hidden = false;
     document.body.classList.add('menu-open');
     nav.classList.remove('is-hidden');
@@ -58,6 +76,7 @@
     setTimeout(() => closeBtn.focus(), 400);
   }
   function closeMenu() {
+    unlockScroll();
     burger.setAttribute('aria-expanded', 'false');
     menuTl.timeScale(1.6).reverse();
     burger.focus({ preventScroll: true });
@@ -103,34 +122,8 @@
     return;
   }
 
-  /* ─────────── HERO: entrada ─────────── */
-  const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  heroTl
-    .from('.nav__brand img', { autoAlpha: 0, duration: .08, repeat: 4, yoyo: true, ease: 'none' }) // parpadeo de neón
-    .from('.hero__kicker', { y: 20, autoAlpha: 0, duration: .8 }, .2)
-    .from('.hero__title .line > span', { yPercent: 110, duration: 1.1, stagger: .1 }, .25)
-    .from('.hero__hand', { autoAlpha: 0, x: -20, rotate: -12, duration: .9, ease: 'back.out(2)' }, '-=.55')
-    .from('.hero__lead', { y: 24, autoAlpha: 0, duration: .9 }, '-=.6')
-    .from('.hero__ctas > *', { y: 20, autoAlpha: 0, duration: .8, stagger: .08 }, '-=.7')
-    .from('.hero__reel', { y: 80, rotate: 6, autoAlpha: 0, duration: 1.3 }, .4)
-    .from('.hero__scroll', { autoAlpha: 0, duration: .6 }, '-=.4');
-
-  // el reel se inclina con el ratón
-  const reel = $('.hero__reel-frame');
-  if (canHover && reel) {
-    const rx = gsap.quickTo(reel, 'rotateX', { duration: .8, ease: 'power3.out' });
-    const ry = gsap.quickTo(reel, 'rotateY', { duration: .8, ease: 'power3.out' });
-    gsap.set(reel, { transformPerspective: 900 });
-    $('.hero').addEventListener('mousemove', e => {
-      rx(-(e.clientY / innerHeight - .5) * 10);
-      ry((e.clientX / innerWidth - .5) * 14);
-    });
-  }
-
-  gsap.to('.hero__copy', {
-    yPercent: -12, autoAlpha: .2, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
+  /* ─────────── HERO: aparece sin más ─────────── */
+  gsap.from(['.hero__copy', '.hero__reel'], { autoAlpha: 0, duration: .6, ease: 'power1.out' });
 
   /* ─────────── LA RUTA: la moto cruza con el scroll ─────────── */
   const moto = $('.ruta__moto');
@@ -177,7 +170,7 @@
     scrollTrigger: { trigger: '.about__text', start: 'top 80%' }
   });
   gsap.from('.plate', {
-    rotate: gsap.utils.wrap([-8, 6]), y: 30, autoAlpha: 0, duration: 1, stagger: .12, ease: 'back.out(1.8)',
+    y: 16, autoAlpha: 0, duration: .6, stagger: .08, ease: 'power2.out',
     scrollTrigger: { trigger: '.plates', start: 'top 90%' }
   });
 
@@ -199,11 +192,10 @@
   });
   initRing(true);
 
-  /* ─────────── RESEÑAS: chapas que se cuelgan de la pared ─────────── */
+  /* ─────────── RESEÑAS ─────────── */
   gsap.from('.sign', {
-    y: -90, rotate: () => gsap.utils.random(-12, 12), autoAlpha: 0,
-    duration: 1.5, stagger: .12, ease: 'elastic.out(1, .45)',
-    scrollTrigger: { trigger: '.wall', start: 'top 80%' }
+    y: 24, autoAlpha: 0, duration: .6, stagger: .08, ease: 'power2.out',
+    scrollTrigger: { trigger: '.wall', start: 'top 85%' }
   });
   gsap.from('.resenas__title', {
     x: -60, autoAlpha: 0, duration: 1, ease: 'expo.out',
@@ -218,7 +210,7 @@
     });
   });
   gsap.from('.score', {
-    scale: .6, rotate: gsap.utils.wrap([-6, 5]), autoAlpha: 0, duration: 1, stagger: .12, ease: 'back.out(2)',
+    y: 16, autoAlpha: 0, duration: .6, ease: 'power2.out',
     scrollTrigger: { trigger: '.scores', start: 'top 90%' }
   });
 
@@ -265,7 +257,7 @@
   }
 
   /* ─────────── VISITANOS ─────────── */
-  gsap.fromTo('.visita__img img', { scale: 1.25 }, {
+  gsap.fromTo('.visita__img img', { scale: 1.08 }, {
     scale: 1, ease: 'none',
     scrollTrigger: { trigger: '.visita', start: 'top bottom', end: 'bottom bottom', scrub: true }
   });
@@ -273,20 +265,6 @@
     x: 40, autoAlpha: 0, duration: 1, stagger: .15, ease: 'expo.out',
     scrollTrigger: { trigger: '.locales', start: 'top 85%' }
   });
-
-  /* Botones: leve efecto imán */
-  if (canHover) {
-    $$('.btn, .round, .burger').forEach(b => {
-      const xTo = gsap.quickTo(b, 'x', { duration: .5, ease: 'power3.out' });
-      const yTo = gsap.quickTo(b, 'y', { duration: .5, ease: 'power3.out' });
-      b.addEventListener('mousemove', e => {
-        const r = b.getBoundingClientRect();
-        xTo((e.clientX - r.left - r.width / 2) * .25);
-        yTo((e.clientY - r.top - r.height / 2) * .35);
-      });
-      b.addEventListener('mouseleave', () => { xTo(0); yTo(0); });
-    });
-  }
 
   addEventListener('load', () => ScrollTrigger.refresh());
 
@@ -298,12 +276,34 @@
     const preview = $('.carta__preview');
     const pImg = $('img', preview);
 
-    // en táctil, la foto va dentro de la fila
-    $$('.dish.has-img').forEach(d => {
-      const t = document.createElement('img');
-      t.className = 'dish__thumb'; t.src = d.dataset.img; t.alt = ''; t.loading = 'lazy';
-      d.prepend(t);
-    });
+    // en táctil, la foto se abre dentro de la fila
+    if (touchCarta) {
+      $$('.dish.has-img').forEach(d => {
+        const name = $('.dish__n', d).firstChild.textContent.trim();
+        const cam = document.createElement('button');
+        cam.type = 'button'; cam.className = 'dish__cam';
+        cam.setAttribute('aria-expanded', 'false');
+        cam.setAttribute('aria-label', 'Ver foto: ' + name);
+        $('.dish__n', d).after(cam);
+        const photo = document.createElement('img');
+        photo.className = 'dish__photo'; photo.alt = name; // src al tocar
+        d.append(photo);
+        d.addEventListener('click', () => {
+          const open = !d.classList.contains('is-open');
+          $$('.dish.is-open').forEach(o => o.classList.remove('is-open'));
+          $$('.dish__cam').forEach(c => c.setAttribute('aria-expanded', 'false'));
+          if (!open) return ScrollTrigger.refresh();
+          if (!photo.src) photo.src = d.dataset.img;
+          cam.setAttribute('aria-expanded', 'true');
+          // se abre cuando la foto ya está cargada, para que el fundido se vea entero
+          photo.decode().catch(() => {}).then(() => {
+            if (cam.getAttribute('aria-expanded') !== 'true') return;
+            d.classList.add('is-open');
+            ScrollTrigger.refresh();
+          });
+        });
+      });
+    }
 
     function select(tab, focus) {
       const panel = $('#' + tab.getAttribute('aria-controls'));
@@ -334,24 +334,27 @@
     });
 
     // foto que sigue al ratón sobre los platos que la tienen
-    if (!canHover) return;
+    if (touchCarta) return;
     const xTo = gsap.quickTo(preview, 'x', { duration: .5, ease: 'power3.out' });
     const yTo = gsap.quickTo(preview, 'y', { duration: .5, ease: 'power3.out' });
     const rTo = gsap.quickTo(preview, 'rotate', { duration: .6, ease: 'power3.out' });
     let lastX = 0;
+    const px = x => gsap.utils.clamp(150, innerWidth - 150, x); // que la foto no se salga por los lados
     gsap.set(preview, { xPercent: -50, yPercent: -110 });
     $$('.dish.has-img').forEach(d => {
-      d.addEventListener('mouseenter', e => {
+      d.addEventListener('pointerenter', e => {
+        if (e.pointerType !== 'mouse') return;
         if (pImg.getAttribute('src') !== d.dataset.img) pImg.src = d.dataset.img;
-        gsap.set(preview, { x: e.clientX, y: e.clientY });
+        gsap.set(preview, { x: px(e.clientX), y: e.clientY });
         gsap.to(preview, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.7)', overwrite: 'auto' });
       });
-      d.addEventListener('mousemove', e => {
-        xTo(e.clientX); yTo(e.clientY);
+      d.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse') return;
+        xTo(px(e.clientX)); yTo(e.clientY);
         rTo(gsap.utils.clamp(-12, 12, (e.clientX - lastX) * .8));
         lastX = e.clientX;
       });
-      d.addEventListener('mouseleave', () => {
+      d.addEventListener('pointerleave', () => {
         gsap.to(preview, { autoAlpha: 0, scale: .6, duration: .3, ease: 'power2.in', overwrite: 'auto' });
       });
     });

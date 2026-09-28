@@ -1,11 +1,12 @@
-# La Porteña · Cocina argentina en Alicante
+# La Porteña · Cafetería argentina en Alicante
 
-Web one-page de La Porteña, café-bar argentino en Avinguda de l'Estació 12, Alicante.
-Asfalto, ladrillo, cuero y neón: la estética motera del local como sistema de diseño.
+Web one-page de La Porteña Café-Bar, cafetería argentina en Avinguda de l'Estació 12, Alicante:
+desayunos, medialunas, empanadas, alfajores y productos argentinos.
 
-- Menú hamburguesa tipo persiana de taller (GSAP)
 - Hero con el vídeo del local
-- Carta con foto al pasar el ratón
-- Carrusel 3D de platos, reseñas y CTA a Instagram animados con GSAP + ScrollTrigger
+- Carta por categorías: foto al pasar el ratón (escritorio) o al tocar el plato (móvil)
+- Carrusel 3D de la vitrina, reseñas, Instagram y preguntas frecuentes
+- SEO local: datos estructurados `CafeOrCoffeeShop`, horario, dirección y teléfono
+- Animaciones con GSAP + ScrollTrigger
 
 HTML/CSS/JS sin build. Abrir `index.html`.
