@@ -327,7 +327,7 @@ html.no-scroll .nav { right: var(--sb, 0px); }
   position: relative; display: grid; gap: 2px; padding: 14px 18px 14px 22px;
   border-radius: 10px; background: var(--crema); color: var(--asfalto); max-width: 260px;
   box-shadow: inset 0 0 0 3px var(--crema), inset 0 0 0 4.5px var(--asfalto);
-  transition: transform .4s var(--ease);
+  transition: translate .4s var(--ease), rotate .4s var(--ease); /* transform lo anima GSAP */
 }
 .plate::before, .plate::after { /* tornillos de matrícula */
   content: ""; position: absolute; top: 50%; width: 6px; height: 6px; margin-top: -3px;
@@ -335,7 +335,7 @@ html.no-scroll .nav { right: var(--sb, 0px); }
 }
 .plate::before { left: 9px; }
 .plate::after { right: 9px; }
-.plate:hover { transform: rotate(-2deg) translateY(-3px); }
+.plate:hover { rotate: -2deg; translate: 0 -3px; }
 .plate__k { font-family: var(--f-display); font-size: 1.6rem; line-height: 1; text-transform: uppercase; color: var(--rojo); }
 .plate__v { font-size: .9rem; line-height: 1.35; font-weight: 500; }
 
@@ -504,7 +504,7 @@ html.no-scroll .nav { right: var(--sb, 0px); }
   border-radius: 12px; padding: 34px 28px 26px;
   box-shadow: inset 0 0 0 4px var(--crema), inset 0 0 0 6px var(--cuero), 0 22px 40px rgba(0, 0, 0, .45);
   transform-origin: 50% 0;
-  transition: transform .5s var(--ease), box-shadow .5s;
+  transition: translate .5s var(--ease), rotate .5s var(--ease), box-shadow .5s; /* transform lo anima GSAP */
 }
 .sign::before, .sign::after { /* remaches */
   content: ""; position: absolute; top: 14px; width: 8px; height: 8px; border-radius: 50%;
@@ -513,7 +513,7 @@ html.no-scroll .nav { right: var(--sb, 0px); }
 .sign::before { left: 14px; }
 .sign::after { right: 14px; }
 .sign:nth-child(3n+2) { background: #f3d9a4; box-shadow: inset 0 0 0 4px #f3d9a4, inset 0 0 0 6px var(--ladrillo), 0 22px 40px rgba(0, 0, 0, .45); }
-@media (hover: hover) { .sign:hover { transform: rotate(-1.2deg) translateY(-6px); } }
+@media (hover: hover) { .sign:hover { rotate: -1.2deg; translate: 0 -6px; } }
 .sign__stars { color: var(--rojo); letter-spacing: 3px; font-size: 1.1rem; }
 .sign__stars .dim { opacity: .25; }
 .sign blockquote { margin: 12px 0 18px; font-size: 1.05rem; line-height: 1.55; }
@@ -661,7 +661,7 @@ html.no-scroll .nav { right: var(--sb, 0px); }
   .resenas__head { margin-bottom: 36px; }
   .resenas .wall {
     display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
-    margin: 0 calc(var(--gutter) * -1); padding: 6px var(--gutter) 34px;
+    margin: 0 calc(var(--gutter) * -1); padding: 26px var(--gutter) 44px; /* hueco para las chapas torcidas */
     scroll-padding: 0 var(--gutter); scrollbar-width: none;
   }
   .resenas .wall::-webkit-scrollbar { display: none; }

@@ -186,10 +186,14 @@
   });
   initRing(true);
 
-  /* ─────────── RESEÑAS ─────────── */
-  gsap.from('.sign', {
-    y: 24, autoAlpha: 0, duration: .6, stagger: .08, ease: 'power2.out',
-    scrollTrigger: { trigger: '.wall', start: 'top 85%' }
+  /* ─────────── RESEÑAS: chapas que se cuelgan de la pared ─────────── */
+  // caen desde arriba y se quedan colgadas cada una con su inclinación
+  gsap.fromTo('.sign', {
+    y: -90, rotate: () => gsap.utils.random(-12, 12), autoAlpha: 0
+  }, {
+    y: 0, rotate: () => gsap.utils.random(-6, 6), autoAlpha: 1,
+    duration: 1.5, stagger: .12, ease: 'elastic.out(1, .45)',
+    scrollTrigger: { trigger: '.wall', start: 'top 80%' }
   });
   gsap.from('.resenas__title', {
     x: -60, autoAlpha: 0, duration: 1, ease: 'expo.out',
@@ -204,7 +208,7 @@
     });
   });
   gsap.from('.score', {
-    y: 16, autoAlpha: 0, duration: .6, ease: 'power2.out',
+    scale: .6, rotate: gsap.utils.wrap([-6, 5]), autoAlpha: 0, duration: 1, stagger: .12, ease: 'back.out(2)',
     scrollTrigger: { trigger: '.scores', start: 'top 90%' }
   });
 
